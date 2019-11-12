@@ -90,6 +90,23 @@ func (m *UserResource) UpdateUser(userId string, body User, qp *query.Params) (*
 	}
 	return user, resp, nil
 }
+func (m *UserResource) UpdateUserPartial(userId string, body User, qp *query.Params) (*User, *Response, error) {
+	url := fmt.Sprintf("/api/v1/users/%v", userId)
+	if qp != nil {
+		url = url + qp.String()
+	}
+	req, err := m.client.requestExecutor.NewRequest("POST", url, body)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var user *User
+	resp, err := m.client.requestExecutor.Do(req, &user)
+	if err != nil {
+		return nil, resp, err
+	}
+	return user, resp, nil
+}
 func (m *UserResource) DeactivateOrDeleteUser(userId string, qp *query.Params) (*Response, error) {
 	url := fmt.Sprintf("/api/v1/users/%v", userId)
 	if qp != nil {
